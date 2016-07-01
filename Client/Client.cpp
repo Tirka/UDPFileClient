@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
 
 	file.close();
 
-	uint32_t sizeMbytes = size / 1024 / 1024;
+	uint32_t sizeMbytes = size / (1024 * 1024);
 
 	clock_t end = clock();
 	double timeElapsed = static_cast<double>(end - begin) / CLOCKS_PER_SEC;
