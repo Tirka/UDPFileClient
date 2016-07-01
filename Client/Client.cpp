@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -52,15 +52,15 @@ int main(int argc, char* argv[])
 	error = CheckArgumens(argc, argv);
 	if (error != 0)
 	{
-		wprintf(L"Ошибка аргументов командной строки.\n");
-		wprintf(L"Использование: .\\client.exe 192.168.10.20 3570 file-to-get.dat\n");
+		wprintf(L"РћС€РёР±РєР° Р°СЂРіСѓРјРµРЅС‚РѕРІ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё.\n");
+		wprintf(L"РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ: .\\client.exe 192.168.10.20 3570 file-to-get.dat\n");
 		return 10;
 	}
 
 	error = WinSockInit();
 	if (error != 0)
 	{
-		wprintf(L"Ошибка при инициализации WinSock\n");
+		wprintf(L"РћС€РёР±РєР° РїСЂРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё WinSock\n");
 		return 20;
 	}
 
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 	clientSocket = INVALID_SOCKET;
 	clientSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (clientSocket == INVALID_SOCKET) {
-		wprintf(L"Ошибка при вызове socket(): %d\n", WSAGetLastError());
+		wprintf(L"РћС€РёР±РєР° РїСЂРё РІС‹Р·РѕРІРµ socket(): %d\n", WSAGetLastError());
 		WSACleanup();
 		return 30;
 	}
@@ -76,11 +76,11 @@ int main(int argc, char* argv[])
 	ZeroMemory(&clientAddr, sizeof(clientAddr));
 	clientAddr.sin_family = AF_INET;
 	clientAddr.sin_port = 0;
-	// TODO: "0.0.0.0" вынести в отдельную переменную
+	// TODO: "0.0.0.0" РІС‹РЅРµСЃС‚Рё РІ РѕС‚РґРµР»СЊРЅСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ
 	error = inet_pton(AF_INET, "0.0.0.0", &clientAddr.sin_addr.s_addr);
 	if (error < 0)
 	{
-		wprintf(L"Ошибка inet_pton()\n");
+		wprintf(L"РћС€РёР±РєР° inet_pton()\n");
 		WSACleanup();
 		return 40;
 	}
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 	error = bind(clientSocket, reinterpret_cast<SOCKADDR*>(&clientAddr), sizeof(clientAddr));
 	if (error != 0)
 	{
-		wprintf(L"Ошибка bind()\n");
+		wprintf(L"РћС€РёР±РєР° bind()\n");
 		WSACleanup();
 		return 50;
 	}
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
 	sockaddr_in bindInfo;
 	int bindInfoLen;
 	getsockname(clientSocket, reinterpret_cast<SOCKADDR*>(&bindInfo), &bindInfoLen);
-	wprintf(L"Клиент запущен по адресу 0.0.0.0:%d\n", bindInfo.sin_port);
+	wprintf(L"РљР»РёРµРЅС‚ Р·Р°РїСѓС‰РµРЅ РїРѕ Р°РґСЂРµСЃСѓ 0.0.0.0:%d\n", bindInfo.sin_port);
 	
 	struct addrinfo hints;
 	struct addrinfo* result = nullptr;
@@ -123,10 +123,10 @@ int main(int argc, char* argv[])
 
 	if (ntopError == nullptr)
 	{
-		wprintf(L"Ошибка inet_ntop()\n");
+		wprintf(L"РћС€РёР±РєР° inet_ntop()\n");
 		return 24;
 	}
-	wprintf(L"Адрес сервера: %hs:%hs\n", servIpAddr, argv[2]);
+	wprintf(L"РђРґСЂРµСЃ СЃРµСЂРІРµСЂР°: %hs:%hs\n", servIpAddr, argv[2]);
 	
 	while(true)
 	{
@@ -140,13 +140,13 @@ int main(int argc, char* argv[])
 			{
 				fileIdentifier = *reinterpret_cast<uint16_t*>(&buf[1]);
 				blocksCount = *reinterpret_cast<uint32_t*>(&buf[3]);
-				wprintf(L"Метаданные получены. ID файла: %d, кол-во блоков: %d.\n", fileIdentifier, blocksCount);
+				wprintf(L"РњРµС‚Р°РґР°РЅРЅС‹Рµ РїРѕР»СѓС‡РµРЅС‹. ID С„Р°Р№Р»Р°: %d, РєРѕР»-РІРѕ Р±Р»РѕРєРѕРІ: %d.\n", fileIdentifier, blocksCount);
 				break;
 			}
-			wprintf(L"Сервер сообщил об ошибке\n");
+			wprintf(L"РЎРµСЂРІРµСЂ СЃРѕРѕР±С‰РёР» РѕР± РѕС€РёР±РєРµ\n");
 			return 44;
 		}
-		wprintf(L"Ошибка или таймаут...\n");
+		wprintf(L"РћС€РёР±РєР° РёР»Рё С‚Р°Р№РјР°СѓС‚...\n");
 	}
 
 	file.open(argv[3], std::ios::binary | std::ios::trunc);
@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
 	std::set<uint32_t>::iterator it;
 	while (!remainingBlocks.empty())
 	{
-		//wprintf(L"Проход по оставшимся блокам...\n");
+		//wprintf(L"РџСЂРѕС…РѕРґ РїРѕ РѕСЃС‚Р°РІС€РёРјСЃСЏ Р±Р»РѕРєР°Рј...\n");
 		buf[0] = C_FILE_BLOCK_ARRAY_REQUEST;
 		*reinterpret_cast<uint16_t*>(&buf[1]) = fileIdentifier;
 		uint16_t maxBlocksRequested = 50;
@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	//wprintf(L"Файл получен: %d\n", *reinterpret_cast<uint32_t*>(&buf[3]));
+	//wprintf(L"Р¤Р°Р№Р» РїРѕР»СѓС‡РµРЅ: %d\n", *reinterpret_cast<uint32_t*>(&buf[3]));
 
 	file.seekp(0, std::ios::end);
 	auto size = file.tellp();
@@ -206,9 +206,9 @@ int main(int argc, char* argv[])
 	double timeElapsed = static_cast<double>(end - begin) / CLOCKS_PER_SEC;
 	double speed = sizeMbytes / timeElapsed;
 
-	wprintf(L"Передача окончена. Размер файла: %d МБ. Скорость передачи: %.1f МБайт/c", sizeMbytes, speed);
+	wprintf(L"РџРµСЂРµРґР°С‡Р° РѕРєРѕРЅС‡РµРЅР°. Р Р°Р·РјРµСЂ С„Р°Р№Р»Р°: %d РњР‘. РЎРєРѕСЂРѕСЃС‚СЊ РїРµСЂРµРґР°С‡Рё: %.1f РњР‘Р°Р№С‚/c", sizeMbytes, speed);
 
-	wprintf(L"\n\nНажмите любую клавишу для продолжения...");
+	wprintf(L"\n\nРќР°Р¶РјРёС‚Рµ Р»СЋР±СѓСЋ РєР»Р°РІРёС€Сѓ РґР»СЏ РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ...");
 
 	getwchar();
 
@@ -226,7 +226,7 @@ void SetConsoleToUTF8()
 
 int CheckArgumens(int argc, char* argv[])
 {
-	// TODO: добавить дополнительные проверки на валидность ip, порта и т.д.
+	// TODO: РґРѕР±Р°РІРёС‚СЊ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РїСЂРѕРІРµСЂРєРё РЅР° РІР°Р»РёРґРЅРѕСЃС‚СЊ ip, РїРѕСЂС‚Р° Рё С‚.Рґ.
 	if (argc != 4)
 	{
 		return 20;
@@ -236,24 +236,24 @@ int CheckArgumens(int argc, char* argv[])
 
 int WinSockInit()
 {
-	// Существуют версии WinSock: 1.0, 1.1, 2.0, 2.1, 2.2
-	// Мы запрашиваем версию 2.2
+	// РЎСѓС‰РµСЃС‚РІСѓСЋС‚ РІРµСЂСЃРёРё WinSock: 1.0, 1.1, 2.0, 2.1, 2.2
+	// РњС‹ Р·Р°РїСЂР°С€РёРІР°РµРј РІРµСЂСЃРёСЋ 2.2
 	WORD wVersionRequested = MAKEWORD(2, 2);
 	WSAData wsaData;
 	int16_t err;
 
-	// Перед началом работы с сокетами необходимо вызвать
-	// инициализирующую функцию и передать ей 
-	// нужную нам версиию. При успешном вызове функции
-	// должен вернуться код 0
+	// РџРµСЂРµРґ РЅР°С‡Р°Р»РѕРј СЂР°Р±РѕС‚С‹ СЃ СЃРѕРєРµС‚Р°РјРё РЅРµРѕР±С…РѕРґРёРјРѕ РІС‹Р·РІР°С‚СЊ
+	// РёРЅРёС†РёР°Р»РёР·РёСЂСѓСЋС‰СѓСЋ С„СѓРЅРєС†РёСЋ Рё РїРµСЂРµРґР°С‚СЊ РµР№ 
+	// РЅСѓР¶РЅСѓСЋ РЅР°Рј РІРµСЂСЃРёРёСЋ. РџСЂРё СѓСЃРїРµС€РЅРѕРј РІС‹Р·РѕРІРµ С„СѓРЅРєС†РёРё
+	// РґРѕР»Р¶РµРЅ РІРµСЂРЅСѓС‚СЊСЃСЏ РєРѕРґ 0
 	err = WSAStartup(wVersionRequested, &wsaData);
 	if (err != 0)
 	{
 		return err;
 	}
 
-	// Библиотека инициализирована, но ее еще желательно проверить
-	// на соответствие версии (должна быть 2.2).
+	// Р‘РёР±Р»РёРѕС‚РµРєР° РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅР°, РЅРѕ РµРµ РµС‰Рµ Р¶РµР»Р°С‚РµР»СЊРЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ
+	// РЅР° СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РІРµСЂСЃРёРё (РґРѕР»Р¶РЅР° Р±С‹С‚СЊ 2.2).
 	if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2)
 	{
 		WSACleanup();
@@ -281,12 +281,12 @@ int RecvFromWithTimeout(long sec, long usec)
 	n = select(clientSocket, &fds, nullptr, nullptr, &tv);
 	if (n == 0)
 	{
-		//wprintf(L"Время ожидания ответа истекло.\n");
+		//wprintf(L"Р’СЂРµРјСЏ РѕР¶РёРґР°РЅРёСЏ РѕС‚РІРµС‚Р° РёСЃС‚РµРєР»Рѕ.\n");
 		return 0;
 	}
 	else if (n == -1)
 	{
-		wprintf(L"Ошибка select()\n");
+		wprintf(L"РћС€РёР±РєР° select()\n");
 		return -10;
 	}
 	//wprintf(L"Trying recvfrom..\n");
