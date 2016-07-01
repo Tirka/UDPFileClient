@@ -8,8 +8,19 @@
 #include "targetver.h"
 
 #include <stdio.h>
-#include <tchar.h>
+//#include <tchar.h>
 
 
 
 // TODO: reference additional headers your program requires here
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include <string.h>
+#include <wchar.h>
+#include <fcntl.h>
+#include <io.h>
+#include <cstdint>
+#include <fstream>
+#include <map>
+#include <set>
+#include <ctime>
